@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.database.database import init_db
 from backend.api.institutions import router as institutions_router
 from backend.api.projects import router as projects_router
+from backend.api.employees import router as employees_router
 
 app = FastAPI(title="EPA System API")
 
@@ -15,6 +16,7 @@ app.add_middleware(
 
 app.include_router(institutions_router, prefix="/api/institutions", tags=["Institutions"])
 app.include_router(projects_router, prefix="/api/projects", tags=["Projects"])
+app.include_router(employees_router, prefix="/api/employees", tags=["Employees"])
 
 @app.get("/health")
 def health():
