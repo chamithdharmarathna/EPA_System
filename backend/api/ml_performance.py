@@ -38,3 +38,12 @@ def predict_all(db: Session = Depends(get_db)):
 @router.get("/results")
 def get_results(db: Session = Depends(get_db)):
     return svc.get_all_results(db)
+
+@router.get("/quarterly/{employee_id}")
+def quarterly_trend(employee_id: str, db: Session = Depends(get_db)):
+    try:
+        return svc.get_quarterly_trend(employee_id, db)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

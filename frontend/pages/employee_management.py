@@ -184,15 +184,25 @@ def phase2_kpi(existing_employees):
     selected_employee = st.selectbox("Select Employee", list(employee_options.keys()), format_func=lambda x: employee_options[x])
 
     if selected_employee:
-        # Check if KPIs already exist
+        # Add Year and Quarter selection at the top
+        col_yr, col_qt = st.columns(2)
+        with col_yr:
+            period_year = st.selectbox("Year", [2023, 2024, 2025, 2026], index=1, key="kpi_year")
+        with col_qt:
+            period_quarter = st.selectbox("Quarter", [1, 2, 3, 4],
+                                          format_func=lambda x: f"Q{x}", key="kpi_quarter")
+
+        st.markdown("---")
+
+        # Check if KPIs already exist for this employee and period
         try:
-            kpi_response = requests.get(f"{API_URL}/api/employees/kpi/{selected_employee}")
+            kpi_response = requests.get(f"{API_URL}/api/employees/kpi/{selected_employee}?year={period_year}&quarter={period_quarter}")
             existing_kpi = kpi_response.json() if kpi_response.status_code == 200 else None
         except:
             existing_kpi = None
 
         if existing_kpi:
-            st.info(f"Updating existing KPI records for {selected_employee}")
+            st.info(f"Updating existing KPI records for {selected_employee} - {period_year} Q{period_quarter}")
 
         with st.form("kpi_form"):
             st.write("### Task Performance Metrics")
@@ -316,6 +326,8 @@ def phase2_kpi(existing_employees):
             if submitted:
                 kpi_data = {
                     "employee_id": selected_employee,
+                    "period_year": period_year,
+                    "period_quarter": period_quarter,
                     "tasks_assigned": tasks_assigned,
                     "tasks_completed": tasks_completed,
                     "task_completion_rate": round(task_completion_rate, 2),
@@ -331,7 +343,7 @@ def phase2_kpi(existing_employees):
                 try:
                     response = requests.post(f"{API_URL}/api/employees/kpi/", json=kpi_data)
                     if response.status_code == 201:
-                        st.success("KPI indicators saved successfully!")
+                        st.success(f"KPI indicators saved successfully for {period_year} Q{period_quarter}!")
                     else:
                         error_msg = response.json().get("detail", "Unknown error")
                         st.error(f"Failed to save KPI: {error_msg}")

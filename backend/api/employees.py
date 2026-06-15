@@ -57,7 +57,11 @@ def get_employee(employee_id: str, db: Session = Depends(get_db)):
 # KPI endpoints - Note the prefix is now /kpi (not /employee-kpi)
 @router.post("/kpi/", response_model=EmployeeKPIResponse, status_code=status.HTTP_201_CREATED)
 def create_or_update_kpi(kpi: EmployeeKPICreate, db: Session = Depends(get_db)):
-    existing = db.query(EmployeeKPI).filter(EmployeeKPI.employee_id == kpi.employee_id).first()
+    existing = db.query(EmployeeKPI).filter(
+        EmployeeKPI.employee_id == kpi.employee_id,
+        EmployeeKPI.period_year == kpi.period_year,
+        EmployeeKPI.period_quarter == kpi.period_quarter
+    ).first()
 
     if existing:
         for key, value in kpi.dict().items():
@@ -72,12 +76,24 @@ def create_or_update_kpi(kpi: EmployeeKPICreate, db: Session = Depends(get_db)):
         db.refresh(db_kpi)
         return db_kpi
 
-@router.get("/kpi/{employee_id}", response_model=EmployeeKPIResponse)
+@router.get("/kpi/{employee_id}", response_model=list[EmployeeKPIResponse])
 def get_kpi(employee_id: str, db: Session = Depends(get_db)):
-    kpi = db.query(EmployeeKPI).filter(EmployeeKPI.employee_id == employee_id).first()
-    if not kpi:
-        raise HTTPException(status_code=404, detail="KPI not found for this employee")
-    return kpi
+    # Returns all quarters for this employee, ordered
+    records = db.query(EmployeeKPI).filter(
+        EmployeeKPI.employee_id == employee_id
+    ).order_by(EmployeeKPI.period_year, EmployeeKPI.period_quarter).all()
+    if not records:
+        raise HTTPException(status_code=404, detail="No KPI records found for this employee")
+    return records
+
+@router.get("/kpi/{employee_id}/latest", response_model=EmployeeKPIResponse)
+def get_kpi_latest(employee_id: str, db: Session = Depends(get_db)):
+    record = db.query(EmployeeKPI).filter(
+        EmployeeKPI.employee_id == employee_id
+    ).order_by(EmployeeKPI.period_year.desc(), EmployeeKPI.period_quarter.desc()).first()
+    if not record:
+        raise HTTPException(status_code=404, detail="No KPI records found for this employee")
+    return record
 
 # Behavior endpoints - Note the prefix is now /behavior (not /employee-behavior)
 @router.post("/behavior/", response_model=EmployeeBehaviorResponse, status_code=status.HTTP_201_CREATED)

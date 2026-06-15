@@ -1,9 +1,12 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 
 class EmployeeKPICreate(BaseModel):
     employee_id: str
+    period_year: int = Field(default=2024, ge=2020, le=2030)
+    period_quarter: int = Field(default=1, ge=1, le=4)
+
     tasks_assigned: int = 0
     tasks_completed: int = 0
     task_completion_rate: float = 0.0

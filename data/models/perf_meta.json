@@ -1,36 +1,32 @@
 {
-  "version": "20260615_055512",
-  "trained_on": "2026-06-15T05:55:12.777146",
+  "version": "20260615_120604",
+  "trained_on": "2026-06-15T12:06:04.530298",
   "employees_trained": 432,
-  "classifier_accuracy": 0.7011,
-  "cv_mean": 0.6275,
-  "cv_std": 0.0434,
-  "r2_score": 0.7398,
-  "rmse": 3.2583,
+  "r2_score": 0.9681,
+  "rmse": 0.7092,
+  "cv_r2_mean": 0.974,
+  "cv_r2_std": 0.0035,
+  "band_accuracy": 0.9425,
   "class_distribution": {
-    "Medium": 172,
-    "High": 138,
-    "Low": 122
+    "Medium": 316,
+    "High": 116
+  },
+  "kpi_weights": {
+    "task_completion_rate": 0.3,
+    "on_time_delivery_rate": 0.25,
+    "quality_score_norm": 0.2,
+    "issue_resolution_rate": 0.1,
+    "defect_penalty": 0.08,
+    "rework_penalty": 0.04,
+    "blocker_penalty": 0.03
   },
   "feature_importance": {
-    "years_of_experience": 0.2141,
-    "job_role_encoded": 0.0044,
-    "task_completion_rate": 0.0988,
-    "on_time_delivery_rate": 0.0595,
-    "defect_count": 0.0512,
-    "issue_resolution_rate": 0.0171,
-    "quality_score": 0.039,
-    "rework_count": 0.005,
-    "blockers_count": 0.0399,
-    "punctuality": 0.0197,
-    "problem_solving": 0.0177,
-    "leadership": 0.0581,
-    "collaboration": 0.0258,
-    "communication": 0.0168,
-    "no_nopay_leave": 0.0192,
-    "avg_response_time": 0.026,
-    "meetings_attended": 0.0602,
-    "learning_hours": 0.1173,
-    "team_interaction_frequency": 0.11
+    "task_completion_rate": 0.6045,
+    "on_time_delivery_rate": 0.2127,
+    "defect_count": 0.0344,
+    "issue_resolution_rate": 0.0076,
+    "quality_score": 0.1194,
+    "rework_count": 0.0095,
+    "blockers_count": 0.012
   }
 }
