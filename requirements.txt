@@ -30,3 +30,5 @@ httpx==0.25.1
 
 # Data Generation (for development)
 faker==20.1.0
+scikit-learn
+joblib

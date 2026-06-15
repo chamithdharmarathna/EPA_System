@@ -184,7 +184,7 @@ def phase2_kpi(existing_employees):
     selected_employee = st.selectbox("Select Employee", list(employee_options.keys()), format_func=lambda x: employee_options[x])
 
     if selected_employee:
-        # Check if KPIs already exist - UPDATED URL
+        # Check if KPIs already exist
         try:
             kpi_response = requests.get(f"{API_URL}/api/employees/kpi/{selected_employee}")
             existing_kpi = kpi_response.json() if kpi_response.status_code == 200 else None
@@ -199,48 +199,113 @@ def phase2_kpi(existing_employees):
 
             col1, col2, col3 = st.columns(3)
 
+            # Get default values
+            default_tasks_assigned = existing_kpi.get('tasks_assigned', 0) if existing_kpi else 0
+            default_tasks_completed = existing_kpi.get('tasks_completed', 0) if existing_kpi else 0
+            default_tasks_on_time = existing_kpi.get('tasks_on_time', 0) if existing_kpi else 0
+            default_defect_count = existing_kpi.get('defect_count', 0) if existing_kpi else 0
+            default_issue_rate = existing_kpi.get('issue_resolution_rate', 0.95) if existing_kpi else 0.95
+            default_quality_score = existing_kpi.get('quality_score', 7.0) if existing_kpi else 7.0
+            default_rework_count = existing_kpi.get('rework_count', 0) if existing_kpi else 0
+            default_blockers_count = existing_kpi.get('blockers_count', 0) if existing_kpi else 0
+
             with col1:
-                tasks_assigned = st.number_input("Tasks Assigned", min_value=0, max_value=500,
-                                                 value=existing_kpi.get('tasks_assigned', 0) if existing_kpi else 0)
-                tasks_completed = st.number_input("Tasks Completed", min_value=0, max_value=500,
-                                                  value=existing_kpi.get('tasks_completed', 0) if existing_kpi else 0)
+                tasks_assigned = st.number_input(
+                    "Tasks Assigned",
+                    min_value=0,
+                    max_value=500,
+                    value=default_tasks_assigned,
+                    step=1,
+                    key="tasks_assigned_input"
+                )
+
+                tasks_completed = st.number_input(
+                    "Tasks Completed",
+                    min_value=0,
+                    max_value=500,
+                    value=default_tasks_completed,
+                    step=1,
+                    key="tasks_completed_input"
+                )
 
                 if tasks_assigned > 0:
                     task_completion_rate = tasks_completed / tasks_assigned
                     st.metric("Task Completion Rate", f"{task_completion_rate:.2%}")
                 else:
                     task_completion_rate = 0
+                    st.metric("Task Completion Rate", "N/A")
 
-                tasks_on_time = st.number_input("Tasks Completed On Time", min_value=0, max_value=500,
-                                                value=existing_kpi.get('tasks_on_time', 0) if existing_kpi else 0)
+                tasks_on_time = st.number_input(
+                    "Tasks Completed On Time",
+                    min_value=0,
+                    max_value=500,
+                    value=default_tasks_on_time,
+                    step=1,
+                    key="tasks_on_time_input"
+                )
 
                 if tasks_assigned > 0:
                     on_time_delivery_rate = tasks_on_time / tasks_assigned
                     st.metric("On-Time Delivery Rate", f"{on_time_delivery_rate:.2%}")
                 else:
                     on_time_delivery_rate = 0
+                    st.metric("On-Time Delivery Rate", "N/A")
 
             with col2:
-                defect_count = st.number_input("Defect Count", min_value=0, max_value=200,
-                                               value=existing_kpi.get('defect_count', 0) if existing_kpi else 0)
-                issue_resolution_rate = st.slider("Issue Resolution Rate", min_value=0.0, max_value=1.0,
-                                                  value=existing_kpi.get('issue_resolution_rate', 0.95) if existing_kpi else 0.95,
-                                                  step=0.01, format="%.2f")
-                quality_score = st.slider("Quality Score", min_value=0.0, max_value=10.0,
-                                          value=existing_kpi.get('quality_score', 7.0) if existing_kpi else 7.0,
-                                          step=0.1)
+                defect_count = st.number_input(
+                    "Defect Count",
+                    min_value=0,
+                    max_value=200,
+                    value=default_defect_count,
+                    step=1,
+                    key="defect_count_input"
+                )
+
+                issue_resolution_rate = st.slider(
+                    "Issue Resolution Rate",
+                    min_value=0.0,
+                    max_value=1.0,
+                    value=default_issue_rate,
+                    step=0.01,
+                    format="%.2f",
+                    key="issue_rate_slider"
+                )
+
+                quality_score = st.slider(
+                    "Quality Score",
+                    min_value=0.0,
+                    max_value=10.0,
+                    value=default_quality_score,
+                    step=0.1,
+                    key="quality_score_slider"
+                )
 
             with col3:
-                rework_count = st.number_input("Rework Count", min_value=0, max_value=50,
-                                               value=existing_kpi.get('rework_count', 0) if existing_kpi else 0)
-                blockers_count = st.number_input("Blockers Count", min_value=0, max_value=50,
-                                                 value=existing_kpi.get('blockers_count', 0) if existing_kpi else 0)
+                rework_count = st.number_input(
+                    "Rework Count",
+                    min_value=0,
+                    max_value=50,
+                    value=default_rework_count,
+                    step=1,
+                    key="rework_count_input"
+                )
+
+                blockers_count = st.number_input(
+                    "Blockers Count",
+                    min_value=0,
+                    max_value=50,
+                    value=default_blockers_count,
+                    step=1,
+                    key="blockers_count_input"
+                )
 
             st.write("### Performance Summary")
             col_a, col_b, col_c = st.columns(3)
             with col_a:
                 if tasks_assigned > 0:
                     st.metric("Completion Rate", f"{task_completion_rate:.1%}")
+                else:
+                    st.metric("Completion Rate", "N/A")
             with col_b:
                 st.metric("Quality Score", f"{quality_score:.1f}/10")
             with col_c:
@@ -264,12 +329,12 @@ def phase2_kpi(existing_employees):
                 }
 
                 try:
-                    # UPDATED URL
                     response = requests.post(f"{API_URL}/api/employees/kpi/", json=kpi_data)
                     if response.status_code == 201:
                         st.success("KPI indicators saved successfully!")
                     else:
-                        st.error(f"Failed to save KPI: {response.json().get('detail', 'Unknown error')}")
+                        error_msg = response.json().get("detail", "Unknown error")
+                        st.error(f"Failed to save KPI: {error_msg}")
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
 
@@ -287,7 +352,7 @@ def phase3_behavioral(existing_employees):
     selected_employee = st.selectbox("Select Employee", list(employee_options.keys()), format_func=lambda x: employee_options[x])
 
     if selected_employee:
-        # Check if behavioral data already exists - UPDATED URL
+        # Check if behavioral data already exists
         try:
             behavior_response = requests.get(f"{API_URL}/api/employees/behavior/{selected_employee}")
             existing_behavior = behavior_response.json() if behavior_response.status_code == 200 else None
@@ -297,7 +362,8 @@ def phase3_behavioral(existing_employees):
         if existing_behavior:
             st.info(f"Updating existing behavioral record for {selected_employee}")
 
-        with st.form("behavioral_form"):
+        # Create form
+        with st.form(key="behavioral_form"):
             st.write("### Behavioral Competencies")
             st.caption("1 = Poor | 2 = Below Average | 3 = Average | 4 = Good | 5 = Excellent")
 
@@ -305,46 +371,88 @@ def phase3_behavioral(existing_employees):
 
             with col1:
                 st.write("#### Core Competencies")
+
                 punctuality = st.select_slider(
                     "Punctuality",
                     options=[1, 2, 3, 4, 5],
-                    value=existing_behavior.get('punctuality', 3) if existing_behavior else 3
+                    value=existing_behavior.get('punctuality', 3) if existing_behavior else 3,
+                    key="punctuality_slider"
                 )
+
                 problem_solving = st.select_slider(
                     "Problem Solving",
                     options=[1, 2, 3, 4, 5],
-                    value=existing_behavior.get('problem_solving', 3) if existing_behavior else 3
+                    value=existing_behavior.get('problem_solving', 3) if existing_behavior else 3,
+                    key="problem_solving_slider"
                 )
+
                 leadership = st.select_slider(
                     "Leadership",
                     options=[1, 2, 3, 4, 5],
-                    value=existing_behavior.get('leadership', 3) if existing_behavior else 3
+                    value=existing_behavior.get('leadership', 3) if existing_behavior else 3,
+                    key="leadership_slider"
                 )
+
                 collaboration = st.select_slider(
                     "Collaboration",
                     options=[1, 2, 3, 4, 5],
-                    value=existing_behavior.get('collaboration', 3) if existing_behavior else 3
+                    value=existing_behavior.get('collaboration', 3) if existing_behavior else 3,
+                    key="collaboration_slider"
                 )
+
                 communication = st.select_slider(
                     "Communication",
                     options=[1, 2, 3, 4, 5],
-                    value=existing_behavior.get('communication', 3) if existing_behavior else 3
+                    value=existing_behavior.get('communication', 3) if existing_behavior else 3,
+                    key="communication_slider"
                 )
 
             with col2:
                 st.write("#### Work Habits")
-                no_nopay_leave = st.number_input("Number of Non-Pay Leaves", min_value=0, max_value=50,
-                                                 value=existing_behavior.get('no_nopay_leave', 0) if existing_behavior else 0)
-                avg_response_time = st.number_input("Average Response Time (minutes)", min_value=0, max_value=120,
-                                                    value=existing_behavior.get('avg_response_time', 30) if existing_behavior else 30)
-                meetings_attended = st.number_input("Meetings Attended (per month)", min_value=0, max_value=50,
-                                                    value=existing_behavior.get('meetings_attended', 15) if existing_behavior else 15)
-                learning_hours = st.number_input("Learning Hours (per month)", min_value=0, max_value=50,
-                                                 value=existing_behavior.get('learning_hours', 5) if existing_behavior else 5)
+
+                # Number inputs - all using integers
+                no_nopay_leave = st.number_input(
+                    "Number of Non-Pay Leaves",
+                    min_value=0,
+                    max_value=50,
+                    value=int(existing_behavior.get('no_nopay_leave', 0)) if existing_behavior else 0,
+                    step=1,
+                    key="no_nopay_leave_input"
+                )
+
+                # Use int for response time (store as int, convert to float later if needed)
+                avg_response_time = st.number_input(
+                    "Average Response Time (minutes)",
+                    min_value=0,
+                    max_value=120,
+                    value=int(existing_behavior.get('avg_response_time', 30)) if existing_behavior else 30,
+                    step=1,
+                    key="avg_response_time_input"
+                )
+
+                meetings_attended = st.number_input(
+                    "Meetings Attended (per month)",
+                    min_value=0,
+                    max_value=50,
+                    value=int(existing_behavior.get('meetings_attended', 15)) if existing_behavior else 15,
+                    step=1,
+                    key="meetings_attended_input"
+                )
+
+                learning_hours = st.number_input(
+                    "Learning Hours (per month)",
+                    min_value=0,
+                    max_value=50,
+                    value=int(existing_behavior.get('learning_hours', 5)) if existing_behavior else 5,
+                    step=1,
+                    key="learning_hours_input"
+                )
+
                 team_interaction_frequency = st.select_slider(
                     "Team Interaction Frequency",
                     options=[1, 2, 3, 4, 5],
-                    value=existing_behavior.get('team_interaction_frequency', 3) if existing_behavior else 3
+                    value=existing_behavior.get('team_interaction_frequency', 3) if existing_behavior else 3,
+                    key="team_interaction_slider"
                 )
 
             # Calculate scores
@@ -360,7 +468,8 @@ def phase3_behavioral(existing_employees):
             with col_c:
                 st.metric("Learning Hours", learning_hours)
 
-            submitted = st.form_submit_button("Save Behavioral Appraisal", type="primary")
+            # Submit button - MUST be inside the form
+            submitted = st.form_submit_button("Save Behavioral Appraisal", type="primary", use_container_width=True)
 
             if submitted:
                 behavior_data = {
@@ -371,14 +480,13 @@ def phase3_behavioral(existing_employees):
                     "collaboration": collaboration,
                     "communication": communication,
                     "no_nopay_leave": no_nopay_leave,
-                    "avg_response_time": avg_response_time,
+                    "avg_response_time": float(avg_response_time),
                     "meetings_attended": meetings_attended,
-                    "learning_hours": learning_hours,
+                    "learning_hours": float(learning_hours),
                     "team_interaction_frequency": team_interaction_frequency
                 }
 
                 try:
-                    # UPDATED URL
                     response = requests.post(f"{API_URL}/api/employees/behavior/", json=behavior_data)
                     if response.status_code == 201:
                         st.success("Behavioral appraisal saved successfully!")
@@ -394,7 +502,8 @@ def phase3_behavioral(existing_employees):
                         else:
                             st.warning("Needs significant improvement")
                     else:
-                        st.error(f"Failed to save: {response.json().get('detail', 'Unknown error')}")
+                        error_msg = response.json().get("detail", "Unknown error") if response.text else "Unknown error"
+                        st.error(f"Failed to save: {error_msg}")
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
 def get_institutions():
