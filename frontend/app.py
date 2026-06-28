@@ -14,7 +14,7 @@ st.sidebar.markdown("---")
 # Navigation - now includes View Employees
 page = st.sidebar.radio(
     "Navigation",
-    ["Institution Setup", "Project Setup", "Employee Management", "View Employees", "Performance Prediction"]
+    ["Institution Setup", "Project Setup", "Employee Management", "View Employees", "Performance Prediction","Module 4 — Conflict & Teams"]
 )
 
 st.sidebar.markdown("---")
@@ -50,3 +50,6 @@ elif page == "View Employees":
 elif page == "Performance Prediction":
     from pages.performance_prediction import performance_prediction_page
     performance_prediction_page()
+elif page == "Module 4 — Conflict & Teams":
+    from pages.module4 import module4_page
+    module4_page()

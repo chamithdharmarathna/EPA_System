@@ -1,0 +1,39 @@
+{
+  "version": "20260628_093219",
+  "analyzed_on": "2026-06-28T09:32:21.141180",
+  "employees_analyzed": 432,
+  "final_k": 6,
+  "silhouette_scores": {
+    "3": 0.343,
+    "4": 0.3913,
+    "5": 0.4124,
+    "6": 0.4495
+  },
+  "best_silhouette": 0.4495,
+  "archetype_labels": {
+    "0": "Mid-career Sinhalese Experienced (English-speaking)",
+    "1": "Mid-career Sinhalese Veteran (Sinhala-speaking)",
+    "2": "Mid-career Sinhalese Veteran (English-speaking)",
+    "3": "Mid-career Sinhalese Experienced (Sinhala-speaking)",
+    "4": "Mid-career Tamil Experienced (Tamil-speaking)",
+    "5": "Mid-career Muslim Veteran (Tamil-speaking)"
+  },
+  "diversity_performance_corr": 0.1725,
+  "opinion_flag_distribution": {
+    "Consensus": 431,
+    "Influenced": 1
+  },
+  "conflict_risk_distribution": {
+    "Low": 287,
+    "Medium": 145
+  },
+  "cluster_distribution": {
+    "0": 101,
+    "1": 49,
+    "2": 70,
+    "3": 89,
+    "4": 71,
+    "5": 52
+  },
+  "teams_analyzed": 30
+}

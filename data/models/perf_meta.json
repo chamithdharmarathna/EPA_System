@@ -1,15 +1,16 @@
 {
-  "version": "20260615_120604",
-  "trained_on": "2026-06-15T12:06:04.530298",
+  "version": "20260615_142508",
+  "trained_on": "2026-06-15T14:25:08.039304",
   "employees_trained": 432,
-  "r2_score": 0.9681,
-  "rmse": 0.7092,
-  "cv_r2_mean": 0.974,
-  "cv_r2_std": 0.0035,
-  "band_accuracy": 0.9425,
+  "r2_score": 0.9854,
+  "rmse": 0.4128,
+  "cv_r2_mean": 0.9748,
+  "cv_r2_std": 0.0052,
+  "band_accuracy": 0.9195,
   "class_distribution": {
-    "Medium": 316,
-    "High": 116
+    "High": 226,
+    "Medium": 155,
+    "Low": 51
   },
   "kpi_weights": {
     "task_completion_rate": 0.3,
@@ -21,12 +22,12 @@
     "blocker_penalty": 0.03
   },
   "feature_importance": {
-    "task_completion_rate": 0.6045,
-    "on_time_delivery_rate": 0.2127,
-    "defect_count": 0.0344,
-    "issue_resolution_rate": 0.0076,
-    "quality_score": 0.1194,
-    "rework_count": 0.0095,
-    "blockers_count": 0.012
+    "task_completion_rate": 0.5875,
+    "on_time_delivery_rate": 0.1952,
+    "defect_count": 0.0275,
+    "issue_resolution_rate": 0.0073,
+    "quality_score": 0.1556,
+    "rework_count": 0.0089,
+    "blockers_count": 0.018
   }
 }

@@ -5,6 +5,11 @@ from backend.api.institutions import router as institutions_router
 from backend.api.projects import router as projects_router
 from backend.api.employees import router as employees_router
 from backend.api.ml_performance import router as performance_router
+from backend.api.ml_module4 import router as module4_router
+
+
+
+# router registrations — add this
 
 app = FastAPI(title="EPA System API")
 
@@ -19,6 +24,7 @@ app.include_router(institutions_router, prefix="/api/institutions", tags=["Insti
 app.include_router(projects_router, prefix="/api/projects", tags=["Projects"])
 app.include_router(employees_router, prefix="/api/employees", tags=["Employees"])
 app.include_router(performance_router, prefix="/api/ml/performance", tags=["Performance Prediction"])
+app.include_router(module4_router, prefix="/api/ml/module4", tags=["Module 4"])
 
 @app.get("/health")
 def health():

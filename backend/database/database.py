@@ -15,9 +15,9 @@ engine = create_engine(
         "timeout": 30,  # Wait 30 seconds for lock to clear
         "check_same_thread": False
     },
-    pool_size=1,  # Only 1 connection for SQLite
-    max_overflow=0,  # No overflow connections
-    pool_timeout=30,
+    pool_size=5,  # Only 1 connection for SQLite
+    max_overflow=10,  # No overflow connections
+    pool_timeout=60,
     echo=False
 )
 
